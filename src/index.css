@@ -1,3 +1,24 @@
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.black-bg-transparent-60 {
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Black with 60% transparency */
+}
+
+.black-bg-transparent-34{
+    background-color: rgba(0, 0, 0, 0.34);
+    /* Black with 60% transparency */
+}
+
+.placeholder-centered::placeholder {
+    text-align: center;
+  }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
