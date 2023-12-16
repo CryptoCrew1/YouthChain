@@ -7,6 +7,21 @@ const Tab = ({ children }) => (
     <div className="flex-col mt-4 pb-24">{children}</div>
 );
 
+const project={
+    projectId:   "ss",
+    Industry:   "ss",
+    ImageUrl:   "ss",
+    DaysLeft:   "ss",
+    ProjectName:   "ss",
+    ProjectDescription:   "ss",
+    Raised:   "ss",
+    Investors:   "ss",
+    Votes:   "ss",
+    MinInvestment:   "ss",
+    Slogan:   "ss",
+    Slogan2:   "ss",
+    ReasonsToInvest:   "ss",
+}
 
 const FundingDetails = () => {
     const [activeTab, setActiveTab] = useState('overview');
@@ -108,22 +123,22 @@ function investCard() {
         <div className="flex justify-between items-center mt-8 mb-4">
             <div>
                 <div className="text-sm font-semibold text-gray-500">RAISED</div>
-                <div className="text-xl font-bold text-cyan-400">3 870 094,02 $</div>
+                <div className="text-xl font-bold text-cyan-400">{project.Slogan} $</div>
             </div>
             <div>
                 <div className="text-sm font-semibold text-gray-500">INVESTORS</div>
-                <div className="text-xl font-bold text-cyan-400">2,856</div>
+                <div className="text-xl font-bold text-cyan-400">{project.Investors}</div>
             </div>
         </div>
 
         <div className="flex justify-between">
             <div>
                 <div className="text-sm font-semibold text-gray-500">MIN INVEST</div>
-                <div className="text-xl font-bold text-cyan-400">399 $</div>
+                <div className="text-xl font-bold text-cyan-400">{project.MinInvestment} $</div>
             </div>
             <div>
-                <div className="text-sm font-semibold text-gray-500">VALUATION</div>
-                <div className="text-xl font-bold text-cyan-400">$70M</div>
+                <div className="text-sm font-semibold text-gray-500 pr-8">VOTES</div>
+                <div className="text-xl font-bold text-cyan-400">$ {project.Votes}M</div>
             </div>
         </div>
     </div>;
@@ -134,7 +149,7 @@ function termsSection() {
         <h2 className="text-3xl font-bold mb-4">TERMS</h2>
         <h3 className="text-xl font-semibold mb-2">ACME AtronOmatic</h3>
 
-        <div className="grid grid-cols-2 gap-18 mb-8">
+        {/*<div className="grid grid-cols-2 gap-18 mb-8">
             <div>
                 <h4 className="text-lg text-cyan-400 font-semibold mb-1">Overview</h4>
                 <p className="font-bold">PRICE PER SHARE</p>
@@ -143,12 +158,12 @@ function termsSection() {
                 <p>Dec. 19, 2023 at 10:59 AM GMT+3</p>
             </div>
             <div>
-                <p className="font-bold">VALUATION</p>
-                <p>$70M</p>
+                <p className="font-bold">VOTES</p>
+                <p>${project.Votes}</p>
                 <p className="font-bold mt-4">FUNDING GOAL</p>
                 <p>$15k - $5M</p>
             </div>
-        </div>
+        </div>*/}
 
         <div className="grid grid-cols-2 gap-18 mb-4">
             <div>
@@ -207,18 +222,16 @@ function leftSideOfText() {
     return <div className="flex-1 relative flex-col">
         <button className=" text-xs font-semibold px-2 py-2 rounded shadow-md"
             style={{ color: '#BD4B6E', backgroundColor: '#FFE0E9' }}>
-            6 DAYS LEFT
+            {project.DaysLeft} DAYS LEFT
         </button>
         <p className="text-xs md:text-base mt-4 font-normal text-left text-cyan-400">
-            GET A PIECE OF ACME ATRONOMATIC
+            {project.Slogan}
         </p>
         <p className="text-xl md:text-3xl font-bold text-left text-cyan-400">
-            Keeping You Ahead of the Storm!
+            {project.Slogan2}
         </p>
         <p className="text-sm md:text-base text-left text-gray-400  mt-1">
-            MyRadar (an AI-focused software company) empowers 15M+ users with an
-            app that anticipates weather and environmental threats. Our anticipated satellites can
-            soon monitor Earth from orbit! These satellites are still in the prototype stage of development.
+            {project.ProjectDescription}
         </p>
         <button className="bg-cyan-400 md:w-1/2 text-black text-base font-bold px-12 py-2 rounded-lg shadow-lg hover:bg-cyan-600 focus:outline-none focus:ring-2 focus:ring-cyan-700 focus:ring-opacity-50 mt-6">
             Vote for this project
@@ -242,7 +255,7 @@ function cardWithImage() {
                         <div className="bg-black shadow p-2 mt-1 rounded-b-[15px] pt-0"
                             style={{ boxShadow: '0 6px 3px rgba(255, 255, 255, 1)', height: '70%', width: '50%' }}>
                             {/* Content for the center component */}
-                            <p className="text-cyan-400 text-xl font-bold text-center mt-1">3 739 562,68 $ Raised</p>
+                            <p className="text-cyan-400 text-xl font-bold text-center mt-1">    {project.Raised} $ Raised</p>
                         </div>
                     </div>
                 </div>

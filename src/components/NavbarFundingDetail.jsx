@@ -161,20 +161,20 @@ export default function NavbarFundingDetail({ name = "" }) {
                     <Menu.Item>
                       {({ active }) => (
                         <a
-                          href="#"
+                            href="/my-events"
                           className={classNames(active ? 'bg-gray-800' : '', 'block px-4 py-2 text-sm text-gray-300')}
                         >
-                          Investor FAQS
+                          My Events
                         </a>
                       )}
                     </Menu.Item>
                     <Menu.Item>
                       {({ active }) => (
                         <a
-                          href="#"
+                          href="/my-projects"
                           className={classNames(active ? 'bg-gray-800' : '', 'block px-4 py-2 text-sm text-gray-300')}
                         >
-                          Success Stories
+                          My Projects
                         </a>
                       )}
                     </Menu.Item>

@@ -6,8 +6,11 @@ import EventScreen from "./EventScreen.jsx";
 import {Route, Routes, Link} from "react-router-dom";
 import EventDetailScreen from "./EventDetailScreen.jsx";
 import FundingDetails from "./FundingDetails.jsx";
-import AddEventScreen from "./AddEventScreen.jsx";
-import NewProjectForm from "./EventForm.jsx";
+
+import MyProjectsScreen from "./MyProjectsScreen.jsx";
+import ProjectFormScreen from "./ProjectFormScreen.jsx";
+import MyEventsScreen from "./MyEventsScreen.jsx";
+import EventFormScreen from "./EventFormScreen.jsx";
 
 
 
@@ -27,6 +30,10 @@ const App = () => {
                     <Route path="/events" element={<EventScreen />} />
                     <Route path="/funding-details" element={<FundingDetails />} />
                     <Route path="/event-details" element={<EventDetailScreen />} />
+                    <Route path="/add-project" element={<ProjectFormScreen />} />
+                    <Route path="/my-projects" element={<MyProjectsScreen />} />
+                    <Route path="/my-events" element={<MyEventsScreen />} />
+                    <Route path="/add-event" element={<EventFormScreen />} />
                 </Routes>
             </div>
         </div>
