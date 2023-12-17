@@ -4,14 +4,20 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 import Web3 from 'web3';
+import { useStateContext } from '../context';
 
 
 
 const LoginScreen = () => {
+    const {connect, address} = useStateContext();
 
     const navigate = useNavigate();
 
     const handleLogin = async () => {
+        if (!address) {
+            connect();
+        }
+
         if (window.ethereum) { // Check if MetaMask is installed
             try {
                 const web3 = new Web3(window.ethereum);

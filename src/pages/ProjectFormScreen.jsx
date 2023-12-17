@@ -2,8 +2,10 @@ import bgImage from '../assets/image.jpg';
 import axios from 'axios';
 import {useNavigate} from "react-router-dom";
 import React, { useEffect, useState } from "react";
+import { useStateContext } from '../context';
 
 function ProjectForm({ formData, handleChange, handleSubmit }) {
+
     const fields = [
         "ProjectName", "ProjectDescription", "ImageUrl", "DaysLeft", "Industry",
         "Raised", "Investors", "Slogan", "Slogan2", "SecondSlogan", "MinInvestment", "ReasonsToInvest",
@@ -62,9 +64,13 @@ function ProjectForm({ formData, handleChange, handleSubmit }) {
 }
 
 import Navbar from '../components/Navbar';
+import { ethers } from 'ethers';
 
 
 function ProjectFormScreen() {
+
+    const { createProject } = useStateContext(); 
+    
     const [formData, setFormData] = useState({
     });
 
@@ -110,6 +116,10 @@ function ProjectFormScreen() {
             console.error('Error:', error);
             // Handle the error (e.g., show an error message)
         }
+
+        await createProject(formData.ProjectName, formData.ProjectDescription, "123")
+
+
         navigate('/my-projects')
     }
 
