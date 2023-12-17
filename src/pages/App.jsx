@@ -11,6 +11,7 @@ import MyProjectsScreen from "./MyProjectsScreen.jsx";
 import ProjectFormScreen from "./ProjectFormScreen.jsx";
 import MyEventsScreen from "./MyEventsScreen.jsx";
 import EventFormScreen from "./EventFormScreen.jsx";
+import LoginScreen from "./LoginScreen.jsx";
 
 
 
@@ -25,7 +26,7 @@ const App = () => {
             </nav>
             <div className="container">
                 <Routes>
-                    <Route path="/" element={<ProjectFundingScreen />} />
+                    <Route path="/" element={<LoginScreen />} />
                     <Route path="/funding" element={<ProjectFundingScreen />} />
                     <Route path="/events" element={<EventScreen />} />
                     <Route path="/funding-details" element={<FundingDetails />} />
@@ -34,6 +35,7 @@ const App = () => {
                     <Route path="/my-projects" element={<MyProjectsScreen />} />
                     <Route path="/my-events" element={<MyEventsScreen />} />
                     <Route path="/add-event" element={<EventFormScreen />} />
+                    <Route path="/login" element={<LoginScreen />} />
                 </Routes>
             </div>
         </div>

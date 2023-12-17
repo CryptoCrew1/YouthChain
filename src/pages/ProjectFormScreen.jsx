@@ -1,88 +1,117 @@
 import bgImage from '../assets/image.jpg';
+import axios from 'axios';
+import {useNavigate} from "react-router-dom";
+import React, { useEffect, useState } from "react";
 
-function ProjectForm({ formData, handleChange }) {
+function ProjectForm({ formData, handleChange, handleSubmit }) {
     const fields = [
-        "Category", "City", "Industry", "ImageUrl", "Days Left", "Project Name",
-        "Project Description", "Raised", "Investors", "Votes", "Min Investment",
-        "Slogan", "Slogan2", "Reasons To Invest", "Address", "Website"
+        "ProjectName", "ProjectDescription", "ImageUrl", "DaysLeft", "Industry",
+        "Raised", "Investors", "Slogan", "Slogan2", "SecondSlogan", "MinInvestment", "ReasonsToInvest",
     ];
-
-    const nestedFields = {
-        TeamMembers: ["Image", "Position", "About"],
-        Terms: ["Company Name", "Price per Share", "Deadline", "Funding Goal",
-            "Max Investment", "Min Number of Shares", "Offering Type",
-            "AssetType", "Max Number of Shares Offered"]
-    };
 
     // Divide fields into two groups for left and right columns
     const halfwayIndex = Math.ceil(fields.length / 2);
     const leftFields = fields.slice(0, halfwayIndex);
     const rightFields = fields.slice(halfwayIndex);
 
-    const renderField = (field, isNested = false, parentField = '') => (
+    const renderField = (field) => (
         <div key={field} className="mb-4">
             <label className="block text-white text-sm font-bold mb-2" htmlFor={field}>
-                {isNested ? `${parentField} - ${field}` : field}
+                {field}
             </label>
             <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-500 bg-white leading-tight focus:outline-none focus:shadow-outline"
                 id={field}
                 type="text"
                 placeholder={field}
-                name={isNested ? `${parentField}[${field}]` : field}
-                value={isNested ? formData[parentField]?.[field] || '' : formData[field] || ''}
+                name={field}
+                value={formData[field] || ''}
                 onChange={handleChange}
             />
         </div>
     );
 
     return (
-        <div className="grid grid-cols-2 gap-4 px-4 py-4"
-             style={{
-                 backgroundImage: `url(${bgImage})`,
-                 backgroundSize: 'cover',
-                 backgroundPosition: 'center'
-             }}>
-            <div className="bg-black bg-opacity-50 p-4 rounded-full shadow-lg">
-                {leftFields.map(field => renderField(field))}
-                {Object.entries(nestedFields).slice(0, 1).map(([parentField, subFields]) => (
-                    subFields.map(subField => renderField(subField, true, parentField))
-                ))}
+        <form onSubmit={handleSubmit}>
+            <div style={{
+                backgroundImage: `url(${bgImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                minHeight: '100vh', // Ensures minimum height of the viewport
+                display: 'flex', // Using flex to center the grid container
+                flexDirection: 'column', // Column direction to align children
+                justifyContent: 'center', // Vertically center content in the viewport
+            }}
+            >
+                <Navbar />
+                <div className="grid grid-cols-2 gap-4 px-4 py-4 mt-4 mx-auto max-w-7xl bg-black bg-opacity-50 p-4 rounded-lg shadow-lg">
+                    {fields.map(field => renderField(field))}
+                </div>
+
+                <div className="flex justify-center pb-4">
+                    <button
+                        type="submit"
+                        className="bg-cyan-400 bg-opacity-50 hover:bg-cyan-500 hover:bg-opacity-70 text-white font-bold py-3 px-6 rounded-full focus:outline-none focus:shadow-outline text-lg"
+                    >
+                        Submit
+                    </button>
+                </div>
             </div>
-
-            <div className="bg-black bg-opacity-50 p-4 rounded-full shadow-lg">
-                {rightFields.map(field => renderField(field))}
-                {Object.entries(nestedFields).slice(1).map(([parentField, subFields]) => (
-                    subFields.map(subField => renderField(subField, true, parentField))
-                ))}
-            </div>
-
-            <div className="col-span-2 flex justify-center">
-                <button
-                    type="submit"
-                    className="mt-4 bg-cyan-400 bg-opacity-50 hover:bg-cyan-500 hover:bg-opacity-70 text-white font-bold py-2 px-6 rounded-full focus:outline-none focus:shadow-outline text-lg"
-                >
-                    Submit
-                </button>
-            </div>
-
-
-        </div>
-
+        </form>
     );
 }
 
-
-import React, {useState} from 'react';
+import Navbar from '../components/Navbar';
 
 
 function ProjectFormScreen() {
     const [formData, setFormData] = useState({
-        ProjectName: '',
-        Category: '',
-        City: '',
-        // ... other fields
     });
+
+    const navigate = useNavigate();
+
+    const [ethereumAddress, setValue] = useState('');
+
+    useEffect(() => {
+        const storedAddress = sessionStorage.getItem('ethereumAddress') || '';
+        setValue(storedAddress);
+    }, []);
+    var pId = "";
+
+    async function handleSubmit(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        console.log(formData);
+        try {
+            // Here you make the API call to submit your formData
+            const response = await axios.post('http://127.0.0.1:8000/addProjects/', formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add other headers here
+                }
+            }); 
+            console.log(response.data);
+            pId = response.data;
+            // Handle response or navigate to another page
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            // Handle errors
+        }
+
+        try {
+                console.log("ethereumAddress" , ethereumAddress)
+                console.log("ID", pId)
+                const response = await axios.post('http://127.0.0.1:8000/associateProject', {
+                "ethereumAddress" : ethereumAddress,
+                "projectId": pId,
+            });
+            console.log(response.data);
+            // Handle the response (e.g., show a success message)
+        } catch (error) {
+            console.error('Error:', error);
+            // Handle the error (e.g., show an error message)
+        }
+        navigate('/my-projects')
+    }
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -108,7 +137,7 @@ function ProjectFormScreen() {
 
     return (
         <div>
-            <ProjectForm formData={formData} handleChange={handleChange}/>
+            <ProjectForm formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} />
 
         </div>
 

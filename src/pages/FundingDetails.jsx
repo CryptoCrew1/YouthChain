@@ -1,30 +1,40 @@
 import { NavbarFundingDetail } from "../components"
 import bgImage from '../assets/image.jpg'
-import cardImage from '../assets/cardImage.webp'
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const Tab = ({ children }) => (
     <div className="flex-col mt-4 pb-24">{children}</div>
 );
 
-const project={
-    projectId:   "ss",
-    Industry:   "ss",
-    ImageUrl:   "ss",
-    DaysLeft:   "ss",
-    ProjectName:   "ss",
-    ProjectDescription:   "ss",
-    Raised:   "ss",
-    Investors:   "ss",
-    Votes:   "ss",
-    MinInvestment:   "ss",
-    Slogan:   "ss",
-    Slogan2:   "ss",
-    ReasonsToInvest:   "ss",
-}
+var project;
 
 const FundingDetails = () => {
     const [activeTab, setActiveTab] = useState('overview');
+    const [projects, setProjects] = useState(null);
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get('projectId'); 
+
+    useEffect(() => {
+        const fetchUserProjects = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/projects/${projectId}`);
+                setProjects(response.data);
+                project = response.data;
+            } catch (error) {
+                console.error('Error fetching user projects:', error);
+            }
+        };
+
+        if (!projects) {
+            fetchUserProjects();
+        }
+    }, [projects, projectId]);
+
+    if (!projects) {
+        return null; // or some other placeholder content
+    }
+
     return (
         <div className='App'>
             <div className="fixed top-0 w-full z-10" style={{
@@ -41,7 +51,7 @@ const FundingDetails = () => {
                             {cardWithImage()}
                         </div>
 
-                        <dev className="flex mt-16">
+                        <div className="flex mt-16">
                             <div className="flex-1 flex-col items-left justify-left">
                                 <div className="mb-4 inline-block"
                                     style={{ boxShadow: '0 1px 1px rgba(255, 255, 255, 1)' }}>
@@ -88,7 +98,7 @@ const FundingDetails = () => {
                                         </Tab>}
                                     {activeTab === 'about' &&
                                         <Tab>
-                                            <AboutSection />
+                                            {<AboutSection />}
                                             <TeamSection />
                                         </Tab>}
                                     {activeTab === 'terms' &&
@@ -100,7 +110,7 @@ const FundingDetails = () => {
                             <div className="flex-1">
                                 {investCard()}
                             </div>
-                        </dev>
+                        </div>
 
                     </div>
                 </div>
@@ -123,7 +133,7 @@ function investCard() {
         <div className="flex justify-between items-center mt-8 mb-4">
             <div>
                 <div className="text-sm font-semibold text-gray-500">RAISED</div>
-                <div className="text-xl font-bold text-cyan-400">{project.Slogan} $</div>
+                <div className="text-xl font-bold text-cyan-400">{project.Raised} $</div>
             </div>
             <div>
                 <div className="text-sm font-semibold text-gray-500">INVESTORS</div>
@@ -138,7 +148,7 @@ function investCard() {
             </div>
             <div>
                 <div className="text-sm font-semibold text-gray-500 pr-8">VOTES</div>
-                <div className="text-xl font-bold text-cyan-400">$ {project.Votes}M</div>
+                <div className="text-xl font-bold text-cyan-400">$ {project.Votes}</div>
             </div>
         </div>
     </div>;
@@ -205,10 +215,10 @@ const AboutSection = () => (
 const TeamSection = () => (
     <div className="pt-8 text-white">
         <h2 className="ttext-base md:text-xl font-regular mb-4">TEAM</h2>
-        <div className="flex-col items-left">
+        <div className="flex-col items-left justify-start">
             {/* Replace with actual image path */}
             <img
-                src="https://www.startengine.com/discover/_next/image?url=https%3A%2F%2Fd19j0qt0x55bap.cloudfront.net%2Fproduction%2Fstartups%2F646fccc47eb65b50461373e5%2Ffounders%2Fimages%2Fprofile_image%2Ffounder_andy.jpg&w=1920&q=100"
+                src="https://image.hurimg.com/i/hurriyet/75/750x422/643dc0f44e3fe1068872a248.jpg"
                 alt="Andrew Green" className="mb-4 rounded-full h-[220px]" />
             <h3 className="text-2xl font-bold">Andrew Green</h3>
             <p className="text-lg">CEO</p>
@@ -249,7 +259,7 @@ function cardWithImage() {
             <div
                 className="bg-black shadow rounded-lg mb-0 mt-12 p-2 rounded-[15px] pt-0"
                 style={{ boxShadow: '0 4px 5px rgba(255, 255, 255, 1)', height: '70%', width: '100%' }}>
-                <img src={cardImage} alt="MyRadar App Screenshot" className="w-full h-full object-cover rounded-[15px]" />
+                <img src={project.ImageUrl} alt="MyRadar App Screenshot" className="w-full h-full object-cover rounded-[15px]" />
                 <div className="justify-end">
                     <div className="flex w-full justify-center items-center">
                         <div className="bg-black shadow p-2 mt-1 rounded-b-[15px] pt-0"

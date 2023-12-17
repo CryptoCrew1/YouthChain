@@ -1,64 +1,55 @@
-
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from 'axios';
+import LoadingPage from "../pages/LoadingPage";
 import {useNavigate} from "react-router-dom";
-import cardImage from "../assets/eventImg.jpg";
-
-
-const events = [
-    {
-        eventId: 1,
-        eventName: '  Tee',
-        eventDescription: 'skksks',
-        img: 'https://marketplace.canva.com/EAEi0h7p9-4/1/0/1600w/canva-music-festival-facebook-event-cover-jgMgwq0k3VE.jpg',
-        startDate:'12 Ekim Salı, 5 Gün Sonra, Şişli, İstanbul'
-    },
-    {
-        eventId: 1,
-        eventName: '  Tee',
-        eventDescription: 'skksks',
-        img: 'https://marketplace.canva.com/EAEi0h7p9-4/1/0/1600w/canva-music-festival-facebook-event-cover-jgMgwq0k3VE.jpg',
-        startDate:'27 Temmuz Salı, 5 Gün Sonra, Şişli, İstanbul'
-    },{
-        eventId: 1,
-        eventName: '  Tee',
-        eventDescription: 'skksks',
-        img: 'https://marketplace.canva.com/EAEi0h7p9-4/1/0/1600w/canva-music-festival-facebook-event-cover-jgMgwq0k3VE.jpg',
-        startDate:'12 Aralık Salı, 5 Gün Sonra, Şişli, İstanbul'
-    },{
-        eventId: 1,
-        eventName: '  Tee',
-        eventDescription: 'skksks',
-        img: 'https://marketplace.canva.com/EAEi0h7p9-4/1/0/1600w/canva-music-festival-facebook-event-cover-jgMgwq0k3VE.jpg',
-        startDate:'12 Aralık Salı, 5 Gün Sonra, Şişli, İstanbul'
-    },{
-        eventId: 1,
-        eventName: '  Tee',
-        eventDescription: 'skksks',
-        img: 'https://marketplace.canva.com/EAEi0h7p9-4/1/0/1600w/canva-music-festival-facebook-event-cover-jgMgwq0k3VE.jpg',
-        startDate:'12 Aralık Salı, 5 Gün Sonra, Şişli, İstanbul'
-    },{
-        eventId: 1,
-        eventName: '  Tee',
-        eventDescription: 'skksks',
-        img: 'https://marketplace.canva.com/EAEi0h7p9-4/1/0/1600w/canva-music-festival-facebook-event-cover-jgMgwq0k3VE.jpg',
-        startDate:'12 Aralık Salı, 5 Gün Sonra, Şişli, İstanbul'
-    },{
-        eventId: 1,
-        eventName: '  Tee',
-        eventDescription: 'skksks',
-        img: 'https://marketplace.canva.com/EAEi0h7p9-4/1/0/1600w/canva-music-festival-facebook-event-cover-jgMgwq0k3VE.jpg',
-        startDate:'12 Aralık Salı, 5 Gün Sonra, Şişli, İstanbul'
-    },
-
-
-]
 
  function MyEventBody() {
+
+    async function fetchUserEvents(ethereumAddress) {
+        try {
+            setIsLoading(true);
+            const response = await axios.get(`http://127.0.0.1:8000/user/events/${ethereumAddress}`);
+            setEvents(response.data);
+            // Handle the successful response here
+        } catch (error) {
+            console.error('Error fetching user events:', error);
+            // Handle errors here
+        } finally {
+            setIsLoading(false); // Stop loading regardless of success or failure
+        }
+    };
+
+    const [ethereumAddress, setValue] = useState('');
+    const [events, setEvents] = useState(null); // To store fetched projects
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const storedAddress = sessionStorage.getItem('ethereumAddress') || '';
+        setValue(storedAddress);
+    }, []);
+    
+    useEffect(() => {
+        if (ethereumAddress != "") {
+            fetchUserEvents(ethereumAddress);
+        }
+    }, [ethereumAddress]);
+
+
+
      const navigate = useNavigate();
 
      const handleClick = () => {
          navigate('/add-event'); // Replace '/new-page' with your desired route
      };
+
+     if (isLoading) {
+        return <LoadingPage />; // Render loading component or any loading indicator
+    }
+    
+    if (!events) {
+        return null; // or some other placeholder content
+    }
+
     return (
 
         <div className="bg-black">
@@ -80,13 +71,13 @@ const events = [
                         <div key={event.id}
                              className="mt-5 lg:w-[calc(100vw/3 - 1.5rem)] xl:w-[calc(100vw/4 - 2rem)]">
                             <div className="relative">
-                                <a href="/event-details" target="_blank">
+                                <a href={`/event-details?eventId=${event.eventId}`} target="_blank">
                                     <img src={event.img} alt="MyRadar App Screenshot"
                                          className="w-full object-cover rounded-[15px]"/>
                                 </a>
                             </div>
                             <div className="py-3">
-                                <h2 className="text-xl font-bold text-white">{event.name}</h2>
+                                <h2 className="text-xl font-bold text-white">{event.eventName}</h2>
                                 <h3 className="text-sm text-gray-400">{event.eventDescription}</h3>
                                 <div className="border-t border-dashed border-gray-300 w-full h-0 my-3"></div>
                                 <div className="flex flex-wrap justify-between">

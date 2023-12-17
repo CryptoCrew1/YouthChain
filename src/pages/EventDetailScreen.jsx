@@ -1,5 +1,3 @@
-import React from 'react';
-// Import your components and assets
 import Navbar from '../components/Navbar';
 // Add other imports for FundingBody, Welcome if they are used in the page
 import bgImage from '../assets/image.jpg';
@@ -8,23 +6,38 @@ import coverImage from '../assets/eventcover.png';
 import speakerImage from '../assets/speaker.png';
 import soundcloudImage from '../assets/sc.png';
 import youtubeImage from '../assets/yt.png';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const event={
-    eventId: 1,
-    eventName: '  ODDITY & ALIAS RAVIN SHOWCASE ',
-    eventDescription: 'skksks',
-    img: 'https://marketplace.canva.com/EAEi0h7p9-4/1/0/1600w/canva-music-festival-facebook-event-cover-jgMgwq0k3VE.jpg',
-    startDate:'12 Ekim Salı, 5 Gün Sonra, Şişli, İstanbul',
-    endDate:"ss",
-    location:"ss",
-    mainSpeaker:"ss",
-    rules:"ss",
-    votes:33,
-    neededVotes:11,
-    }
-    const percentage=event.votes/event.neededvotes*100;
+var event;
 
 const EventDetailScreen = () => {
+
+    const [events, setProjects] = useState(null);
+    const urlParams = new URLSearchParams(window.location.search);
+    const eventId = urlParams.get('eventId');
+
+    useEffect(() => {
+        const fetchUserProjects = async () => {
+            try {
+                const response = await axios.get(`http://127.0.0.1:8000/events/${eventId}`);
+                setProjects(response.data);
+                event = response.data;
+            } catch (error) {
+                console.error('Error fetching user projects:', error);
+            }
+        };
+
+        if (!events) {
+            fetchUserProjects();
+        }
+    }, [events, eventId]);
+
+    if (!events) {
+        return null; // or some other placeholder content
+    }
+    const percentage = (event.votes / event.neededVotes * 100);
+
     return (
         <div className='App'>
             <div className="min-h-screen" style={{ backgroundRepeat: 'no-repeat', backgroundPosition: 'top' }}>
@@ -56,16 +69,14 @@ const EventDetailScreen = () => {
                 </div>
 
                 {/* Description and Rules Section */}
-                <div className="bg-black text-white p-8 flex flex-col lg:flex-row">
+                <div className='bg-black'>
+                <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 text-white p-8 flex flex-col lg:flex-row">
                     <div className="max-w-4xl lg:mr-8">
                         {/* Description Section */}
                         <div className="mb-8">
                             <h2 className="text-2xl font-bold mb-4">Description</h2>
                             <p className="mb-4">
-                                maNga is preparing to bring its new album 'Anthropocene 002' together with its fans for
-                                the first time! 'Anthropocene 002' Album launch concert is at Bostancı Show Center with
-                                the Atlantis
-                                Production organization on Friday, December 15, 2023!
+                                {event.eventDescription}
                             </p>
                         </div>
 
@@ -73,36 +84,25 @@ const EventDetailScreen = () => {
                         <div>
                             <h2 className="text-2xl font-bold mb-4">Rules</h2>
                             <p>
-                                The event is for participants aged 18 and over. It is forbidden to bring food and drink,
-                                sharp, piercing or flammable tools into the event area. Event participants agree that
-                                photo & video
-                                shooting will be done in the event area. Organization and venue officials have the right
-                                not to let
-                                people they deem unsuitable to the event and backstage area. Particular attention is
-                                paid to the balance
-                                in the number of men and women, their attitude, style, and suitability in general, and
-                                entry may not be
-                                possible due to these and similar reasons. The decision of this event is at the absolute
-                                right of the
-                                organization.
+                                {event.rules}
                             </p>
                         </div>
                     </div>
 
-                        {/* Votes Card */}
+                    {/* Votes Card */}
 
-                    <div className="bg-gray-900 p-6 rounded-2xl shadow-xl w-full md:max-w-sm lg:max-w-md h-52"
-                         style={{boxShadow: '0 0 10px #fff'}}>
-                        <h2 className="text-white text-lg font-semibold mb-4">Votes</h2>
+                    <div className="bg-gray-900 p-6 pt-0 rounded-2xl shadow-xl w-full md:max-w-sm lg:max-w-md"
+                        style={{ boxShadow: '0 0 10px #fff' }}>
+                        <h2 className="pt-7 text-white text-lg font-semibold mb-4">Votes</h2>
                         <div className="relative bg-gray-800 rounded-full overflow-hidden h-4 text-xs flex mb-4">
-                            <div style={{width: '67%'}}
-                                 className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-500">
-                                <span className="absolute left-2">67%</span>
+                            <div style={{ width: `${percentage}%` }}
+                                className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-500">
+                                <span className="absolute left-2">{percentage.toFixed(2)}%</span>
                             </div>
                         </div>
                         <div className="flex justify-between text-white mb-4">
-                            <span className="invisible">67%</span> {/* Invisible span for maintaining layout */}
-                            <span>210 votes</span>
+                            <span className="invisible">{percentage.toFixed(2)}%</span> {/* Invisible span for maintaining layout */}
+                            <span>{event.votes} votes</span>
                         </div>
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full w-full">
@@ -110,12 +110,10 @@ const EventDetailScreen = () => {
                         </button>
                     </div>
 
-                    </div>
                 </div>
 
                 <div className="bg-black text-white p-8">
                     <div className="max-w-6xl mx-auto">
-                        <br />
 
                         {/* Speakers Section */}
                         <h2 className="text-xl font-bold mb-4">Speakers</h2>
@@ -134,7 +132,7 @@ const EventDetailScreen = () => {
                             {/* Speaker Name and Line */}
                             <div className="flex-1 flex items-center justify-center">
                                 {/* Assuming Hande Tura is centered and there's equal spacing between the text and the icons */}
-                                <span className="text-4xl mr-40">Hande Tura</span> {/* Adjust the margin as needed */}
+                                <span className="text-4xl mr-40">{event.mainSpeaker}</span> {/* Adjust the margin as needed */}
                                 <img src={soundcloudImage} alt="Soundcloud"
                                     style={{ width: '100px', height: '40px' }}  // Specify your desired dimensions
                                     className="mr-40" />
@@ -151,6 +149,11 @@ const EventDetailScreen = () => {
                     </div>
                 </div>
             </div>
+                </div>
+                
+
+
+        </div>
 
     );
 }

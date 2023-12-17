@@ -1,11 +1,5 @@
 import { Navbar } from '../components';
-
-
 import MyProjectBody from "../components/MyProjectBody.jsx";
-
-
-
-
 
 const MyProjectsScreen = () => {
 
